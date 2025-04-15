@@ -29,7 +29,7 @@ A script for macOS that provides app toggle functionality and a customizable app
    # Add this script to your init.lua file
    ```
 3. Either replace your existing `~/.hammerspoon/init.lua` with this script or add the contents to your existing config
-4. Give hammerspoon accessibility permissions if it doesn't have them already
+4. Open hammerspoon & give it accessibility permissions if it doesn't have them already
 ![Alt text](images/preferences-icon.png)
 ![Alt text](images/preferences.png)
 4. Reload your Hammerspoon configuration
