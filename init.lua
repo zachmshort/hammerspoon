@@ -1,46 +1,45 @@
--- App Carousel Script for specific applications
--- Keeps the previous toggle functionality and adds a carousel mode
 
--- Toggle functionality
+-- toggle functionality
 local appHistory = {}
 local historyLimit = 10  -- last 10 apps
 local isManualSwitch = false  -- flag to track if manually switching apps
 
--- Carousel functionality - define your preferred apps here
+-- carousel functionality 
+-- whatever apps are added here are included in the possible apps you can cycle through
 local carouselApps = {
     "Google Chrome",
     "iTerm2",
-    "Simulator", 
-    "Xcode"
+    "Simulator",
 }
+
 local currentCarouselIndex = 1
 
--- Function to update application history when focus changes
+-- function to update application history when focus changes
 local function applicationWatcher(appName, eventType)
     if eventType == hs.application.watcher.activated then
-        -- Only update history if this wasn't triggered by our own switcher
+        -- update history if this wasn't triggered by our own switcher
         -- or if it was but we've now reset the flag
         if not isManualSwitch then
-            -- Remove the app from history if it's already there
+            -- remove the app from history if it's already there
             for i, existingApp in ipairs(appHistory) do
                 if existingApp == appName then
                     table.remove(appHistory, i)
                     break
                 end
             end
-            -- Add the app to the front of history
+            -- add the app to the front of history
             table.insert(appHistory, 1, appName)
-            -- Trim history if it's too long
+            -- trim history if it's too long
             if #appHistory > historyLimit then
                 table.remove(appHistory)
             end
-            -- Debug: Print the current history
+            -- Debug
             print("App history updated:")
             for i, app in ipairs(appHistory) do
                 print(i .. ": " .. app)
             end
 
-            -- Update currentCarouselIndex if current app is in carousel
+            -- update currentCarouselIndex if current app is in carousel
             for i, app in ipairs(carouselApps) do
                 if app == appName then
                     currentCarouselIndex = i
@@ -48,34 +47,34 @@ local function applicationWatcher(appName, eventType)
                 end
             end
         else
-            -- Reset the flag for next time
+            -- reset the flag for next time
             isManualSwitch = false
         end
     end
 end
 
--- Start the application watcher
+-- application watcher
 local appWatcher = hs.application.watcher.new(applicationWatcher)
 appWatcher:start()
 
--- Function to toggle between the two most recent applications
+-- function to toggle between the two most recent applications
 local function toggleBetweenApps()
     if #appHistory >= 2 then
         local currentApp = appHistory[1]
         local targetApp = appHistory[2]
-        -- Swap the top two apps in our history to reflect the change
+        -- swap the top two apps in our history to reflect the change
         appHistory[1] = targetApp
         appHistory[2] = currentApp
         print("Toggling from: " .. currentApp .. " to: " .. targetApp)
-        -- Set the flag so we don't double-update history
+        -- set the flag so we don't double-update history
         isManualSwitch = true
-        -- Get the actual application object instead of just using the name
+        -- get the actual application object instead of just using the name
         local app = hs.application.get(targetApp)
         if app then
-            -- Activate the app and bring it to front
+            -- activate the app and bring it to front
             app:activate(true)
         else
-            -- Fallback to launchOrFocus if we couldn't get the app object
+            -- fallback to launchOrFocus 
             hs.application.launchOrFocus(targetApp)
         end
     else
@@ -83,12 +82,11 @@ local function toggleBetweenApps()
     end
 end
 
--- Function to cycle through the carousel of selected apps
+-- function to cycle through the carousel of selected apps
 local function cycleNextApp()
-    -- Get list of running applications that match our carousel
+    -- get list of running applications that match our carousel
     local runningCarouselApps = {}
     local allApps = hs.application.runningApplications()
-    
     for _, app in ipairs(allApps) do
         local appName = app:name()
         for _, carouselApp in ipairs(carouselApps) do
@@ -98,14 +96,14 @@ local function cycleNextApp()
             end
         end
     end
-    
-    -- If no carousel apps are running, do nothing
+	
+    -- if no carousel apps are running, do nothing
     if #runningCarouselApps == 0 then
         print("No carousel apps are currently running")
         return
     end
     
-    -- Find current app in the running carousel apps
+    -- find current app in the running carousel apps
     local currentAppName = hs.application.frontmostApplication():name()
     local currentIndex = 0
     
@@ -116,7 +114,7 @@ local function cycleNextApp()
         end
     end
     
-    -- Determine next app (if current app isn't in carousel, start at the beginning)
+    -- determine next app (if current app isn't in carousel, start at the beginning)
     local nextIndex = currentIndex + 1
     if nextIndex > #runningCarouselApps or currentIndex == 0 then
         nextIndex = 1
@@ -125,20 +123,24 @@ local function cycleNextApp()
     local targetApp = runningCarouselApps[nextIndex]
     print("Cycling to: " .. targetApp)
     
-    -- Set the flag so we don't double-update history
+    -- set the flag so we don't double-update history
     isManualSwitch = true
     
-    -- Get the actual application object and activate it
+    -- get the actual application object and activate it
     local app = hs.application.get(targetApp)
     if app then
         app:activate(true)
     end
 end
 
--- Keep the toggle functionality on cmd+shift+alt+ctrl+0
+-- this is the command that just goes back and forth between the last two apps
+-- this binding is not practical without a customizable keyboard
+-- you can set it to whatever you like
 hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "0", toggleBetweenApps)
 
--- Add carousel functionality on a different key combination (cmd+shift+alt+ctrl+9)
+-- this is the command that cycles between the apps in the carousel
+-- this binding is not practical without a customizable keyboard
+-- you can set it to whatever you like
 hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "9", cycleNextApp)
 
-print("Toggle and Carousel functionality registered!")
+print("toggle and carousel functionality registered")
