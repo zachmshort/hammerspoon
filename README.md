@@ -17,19 +17,19 @@ A script for macOS that provides app toggle functionality and a customizable app
 ## Installation
 
 1. Install [Hammerspoon](https://www.hammerspoon.org/) if you don't have it already.
-2. ```bash
+   ```bash
     brew install hammerspoon
 
     ```
-3. Copy the script to your Hammerspoon configuration directory:
+2. Copy the script to your Hammerspoon configuration directory:
    ```bash
    # Create the config directory if it doesn't exist
    mkdir -p ~/.hammerspoon/
    
    # Add this script to your init.lua file
    ```
-4. Either replace your existing `~/.hammerspoon/init.lua` with this script or add the contents to your existing config
-5. Reload your Hammerspoon configuration
+3. Either replace your existing `~/.hammerspoon/init.lua` with this script or add the contents to your existing config
+4. Reload your Hammerspoon configuration
 
 ## Configuration
 
