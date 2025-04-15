@@ -16,16 +16,20 @@ A script for macOS that provides app toggle functionality and a customizable app
 
 ## Installation
 
-1. Install [Hammerspoon](https://www.hammerspoon.org/) if you don't have it already
-2. Copy the script to your Hammerspoon configuration directory:
+1. Install [Hammerspoon](https://www.hammerspoon.org/) if you don't have it already.
+2. ```bash
+    brew install hammerspoon
+
+    ```
+3. Copy the script to your Hammerspoon configuration directory:
    ```bash
    # Create the config directory if it doesn't exist
    mkdir -p ~/.hammerspoon/
    
    # Add this script to your init.lua file
    ```
-3. Either replace your existing `~/.hammerspoon/init.lua` with this script or add the contents to your existing config
-4. Reload your Hammerspoon configuration
+4. Either replace your existing `~/.hammerspoon/init.lua` with this script or add the contents to your existing config
+5. Reload your Hammerspoon configuration
 
 ## Configuration
 
@@ -59,11 +63,11 @@ local carouselApps = {
 }
 ```
 
-Note: The app names must match the official application names exactly.
+Note: The app names must match the official application names exactly. And based on Apple Documentation you are not allowed to remap the native tabbing behaviors (cmd + tab).
 
 ## Using with a Programmable Keyboard
 
-If you have a programmable keyboard like a Moonlander:
+If you have a programmable keyboard:
 
 1. Configure a key on your keyboard to send the key combinations you've defined in Hammerspoon
 2. For a single key solution, map a key to send:

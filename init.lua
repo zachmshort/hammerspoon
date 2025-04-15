@@ -1,18 +1,22 @@
+-- init.lua, you could move this function into something like app-switch.lua and require it but this is all i use hammerspoon for
+-- if you open hammerspoon after putting this in ~/.hammerspoon and reload hammerspoon you should see a series of print statements
 
 -- toggle functionality
-local appHistory = {}
+local appHistory = {} -- stores the apps in rotation
 local historyLimit = 10  -- last 10 apps
 local isManualSwitch = false  -- flag to track if manually switching apps
 
 -- carousel functionality 
 -- whatever apps are added here are included in the possible apps you can cycle through
+-- this also avoids cycling through finder everytime 
 local carouselApps = {
     "Google Chrome",
     "iTerm2",
     "Simulator",
+    "Terminal",
 }
 
-local currentCarouselIndex = 1
+CurrentCarouselIndex = 1
 
 -- function to update application history when focus changes
 local function applicationWatcher(appName, eventType)
@@ -33,7 +37,6 @@ local function applicationWatcher(appName, eventType)
             if #appHistory > historyLimit then
                 table.remove(appHistory)
             end
-            -- Debug
             print("App history updated:")
             for i, app in ipairs(appHistory) do
                 print(i .. ": " .. app)
@@ -42,7 +45,7 @@ local function applicationWatcher(appName, eventType)
             -- update currentCarouselIndex if current app is in carousel
             for i, app in ipairs(carouselApps) do
                 if app == appName then
-                    currentCarouselIndex = i
+                    CurrentCarouselIndex = i
                     break
                 end
             end
@@ -53,11 +56,11 @@ local function applicationWatcher(appName, eventType)
     end
 end
 
--- application watcher
 local appWatcher = hs.application.watcher.new(applicationWatcher)
 appWatcher:start()
 
 -- function to toggle between the two most recent applications
+-- sometimes they don't properly register unless they've been opened but im working on it 
 local function toggleBetweenApps()
     if #appHistory >= 2 then
         local currentApp = appHistory[1]
