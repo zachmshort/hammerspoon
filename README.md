@@ -1,6 +1,6 @@
 # Hammerspoon App Toggle & Carousel
 
-A powerful script for macOS that provides Windows-style Alt+Tab functionality and a customizable app carousel.
+A script for macOS that provides app toggle functionality and a customizable app carousel.
 
 ## Features
 
